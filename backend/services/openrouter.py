@@ -4,7 +4,7 @@ import httpx
 import re
 from sse_starlette.sse import ServerSentEvent
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
 
 async def stream_advice(transactions, health_score, unused_subs, savings_rate, query=None):

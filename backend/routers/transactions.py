@@ -20,7 +20,7 @@ _transaction_store: list = []
 
 async def query_llm_json(prompt: str, system_prompt: str) -> list:
     """Queries OpenRouter LLM at zero temperature and returns parsed JSON array."""
-    api_key = os.getenv("OPENROUTER_API_KEY", "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")
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
     model = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3-8b-instruct:free")
     
     if not api_key:
@@ -145,7 +145,7 @@ async def classify_statement(request: Request):
     if not txns:
         return []
         
-    api_key = os.getenv("OPENROUTER_API_KEY", "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")
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
     
     # Batch the transaction descriptions to clean them up in a single call
     prompt = f"Please clean up, classify, and tag these raw bank transactions:\n\n{json.dumps(txns, indent=2)}"
@@ -221,7 +221,7 @@ async def upload_statement(file: UploadFile = File(...)):
     if not content:
         return {"error": "Uploaded file is empty"}
         
-    api_key = os.getenv("OPENROUTER_API_KEY", "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")
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
     
     # 1. HANDLE PDF STATEMENT
     if filename.lower().endswith(".pdf"):
@@ -474,7 +474,7 @@ async def process_receipt(request: Request):
     """
     data = await request.json()
     image_data = data.get("image", "")
-    api_key = os.getenv("OPENROUTER_API_KEY", "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")
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
 
     if api_key and image_data:
         try:

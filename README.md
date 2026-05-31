@@ -1,53 +1,204 @@
 # 💸 Finehands
 
-> The ultimate financial intelligence dashboard for Indian developers who earn in Lakhs, dream in Crores, spend like they're VC-backed, and need an AI to politely tell them to stop buying mechanical keyboards.
+> *The financial dashboard for developers who earn in Lakhs, dream in Crores, spend like they're funded by Y Combinator, and need an AI to gently suggest they stop buying "ergonomic" mechanical keyboards.*
 
-Finehands is a multi-dimensional personal finance, wealth compounding, and passive income analytics platform built with **FastAPI** and **React (Vite)**. It aggregates raw bank statement data (PDF/CSV/JSON), parses your spending DNA using machine learning archetypes, runs 500-trial Box-Muller Monte Carlo simulations, and connects you to **The Money Doctor**—a highly intelligent (and mathematically strictly checked) AI financial advisor.
+Finehands is a hyper-intelligent personal finance platform that turns your bank statements into actionable insights. Upload a PDF, let our ML handle the chaos, and get real-time wealth predictions powered by Monte Carlo simulations and an AI advisor that won't judge your Starbucks addiction.
 
----
+**Features that actually work:**
+- 🏦 **Scary Accurate Spending Analysis** — Knows you're a "Subscription Hoarder" better than you do
+- 📊 **Monte Carlo Wealth Predictions** — Tells you if you'll be rich or ramen-poor in 10 years (with confidence bands!)
+- 💰 **Indian Tax & Passive Income Modeling** — LTCG, marginal slabs, PPF EEE status—all baked in
+- 🤖 **The Money Doctor AI** — Stream-powered advisor that won't hallucinate your savings rate
+- 🧬 **Spending DNA Archetypes** — Reveals if you're "The Impulse Buyer," "The Disciplined Saver," or worse
+- 📱 **Bank Statement OCR** — PDF uploads that don't suck
+- 🎮 **Gamification** — Because adulting needs achievement badges
 
-## 🚀 The Feature Show (Or: Why Excel is sweating)
-
-### 📈 1. India Passive Income & Investment Predictor
-Ever wondered how long it takes to retire on passive digital assets? Slide the controls to model compounding annuities in real-time.
-* **Marginal Slab & LTCG Taxation**: Fully models Indian tax rules ( slab rates, EEE tax status for PPF, and the standard 12.5% LTCG on Equity Mutual Fund gains above ₹1.25L).
-* **Real vs. Nominal Curves**: Graphing purchasing power erosion under 6% average inflation, so you know *exactly* what your money is worth in 2046.
-* **Box-Muller Monte Carlo Engine**: Runs 500 stochastic trials per asset in Python to render P10 (Bearish), P50 (Expected), and P90 (Bullish) probability bands. No more "static returns" illusions.
-
-### 🧠 2. Spending DNA / Archetype Vectors
-We run your transaction ledger through a hybrid K-Means + rule-based classification algorithm to output your spending vector across 6 dimensions.
-* Discover your true self: Are you **"The Subscription Hoarder"** (actively paying for 8 streaming services + a gym you visited once in 2024), **"The Impulse Buyer"** (emotional retail therapy spikes), or **"The Disciplined Saver"**?
-* Features a gorgeous, custom-centered **Recharts Radar Chart** with explicit wrapper bounds that guarantees category labels like `Utilities` or `Entertainment` never crop!
-
-### 🤖 3. The Money Doctor AI Advisor
-A direct stream connection to a personal financial advisor powered by OpenRouter LLMs.
-* **Math Integrity Guardrails**: Hardcoded with a ⚠️ **Critical Math & Unit Sanity Checklist** so the model *never* hallucinations Lakhs (L) as Crores (Cr) or tells you that your inflation-adjusted future value is somehow less than the principal you invested.
-* **Upstream Rate-Limit Resilience**: Venice (the free provider) feeling rate-limited? No problem! The advisor automatically cycles through fallback models (`gemma-2-9b`, `mistral-7b`, `qwen-2.5-72b`) before falling back to a beautiful **offline-first local advice generator** so you never see a raw network error.
-* **Pristine Markdown Render Engine**: Built from scratch to render beautiful **glassmorphic HTML tables**, dynamic numbered emoji lists, and glowing colored callout cards (🎯 Takeaways, 📋 Assumptions, 📈 Inflation notes, and 👑 Bottom Lines).
-
-### 📂 4. AI-Powered Bank Statement Importer
-Because typing transactions by hand is a form of cognitive torture.
-* **Multi-Format Ingestion**: Upload bank statement PDFs, CSVs, or JSONs.
-* **Backend PDF Parsing**: Integrates `pypdf` on the FastAPI backend to parse raw text directly, bypassing client-side password blockers.
-* **Zero-Temp Schema Mapper**: The AI maps raw descriptions (e.g. `UPI-BHIM-STARBUCKS-120302-MUM`) into clean merchant entities (`Starbucks`), categories (`food`), and tags subscriptions.
-* **Interactive Editable Grid**: Review the AI's work, rename merchants, adjust dropdown categories, and toggle subscription status inline before committing the transaction batch.
+Built with FastAPI, React (Vite), Zustand, and enough Glassmorphism to make your eyes hurt.
 
 ---
 
-## 🛠️ Stack & Aesthetic
+## ⚡ The Quick Start
 
-* **Backend**: FastAPI, `pypdf`, `httpx`, `numpy`, `python-dotenv`, `sse-starlette`
-* **Frontend**: React (Vite), TypeScript, Zustand, Recharts, Lucide Icons, Tailwind CSS
-* **Design Philosophy**: Deep Space Glassmorphism. Features absolute-positioned ambient glowing aurora background orbs, radial body mesh gradients (`#0d1326` to `#070B14`), and a custom geometric SVG logo mark representing Bezier growth vectors.
-
----
-
-## 🏃 Quick Start (How to boot it up)
-
-### 🐍 1. Start the FastAPI Backend
+### 🐍 Backend (Python 3.10+)
 ```bash
 cd backend
-# Make sure your virtual environment is active
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+Backend runs at `http://localhost:8000` | Docs at `http://localhost:8000/docs`
+
+### ⚛️ Frontend (Node 18+)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:5173`
+
+---
+
+## 🎯 What's Inside
+
+### Backend (`/backend`)
+- **FastAPI** server with SSE streaming for real-time AI responses
+- **ML models** for spending classification, anomaly detection, and health scoring
+- **Monte Carlo engine** for stochastic wealth simulation
+- **LLM integration** via OpenRouter (fallback modes for rate limits)
+- **PDF parsing** for bank statements
+- **Zustand + Zustand-persist** state management
+
+### Frontend (`/frontend`)
+- **React 19** with TypeScript + Vite
+- **Zustand** stores for transactions, goals, gamification, UI state
+- **Recharts** for beautiful, interactive charts
+- **Tailwind CSS** + custom Glassmorphism design
+- **Components**: Dashboard, Advisor, Simulator, Anomaly Scanner, Goal Tracker, etc.
+
+### Key Algorithms
+- **Health Score**: 7-factor composite with temporal decay (savings rate, emergency fund, bloat index, consistency, diversity, anomaly impact, trend)
+- **Anomaly Detection**: Category-aware modified z-score with IQR fallback
+- **Spending Persona**: Hybrid k-means + rule-based clustering (6 archetypes)
+- **Wealth Simulator**: Stochastic modeling with income volatility, expense inflation, tax modeling
+
+---
+
+## 📋 Project Structure
+```
+finehands/
+├── backend/
+│   ├── app.py              # FastAPI entry point
+│   ├── requirements.txt    # Python deps
+│   ├── ml/                 # ML algorithms
+│   │   ├── health_score.py
+│   │   ├── anomaly_detector.py
+│   │   ├── persona_classifier.py
+│   │   └── monte_carlo.py
+│   ├── routers/            # API endpoints
+│   │   ├── analytics.py
+│   │   ├── goals.py
+│   │   ├── transactions.py
+│   │   └── ...
+│   └── services/           # Integrations
+│       ├── openrouter.py   # LLM streaming
+│       └── cache.py
+│
+└── frontend/
+    ├── src/
+    │   ├── components/     # React components
+    │   ├── pages/          # Full pages
+    │   ├── store/          # Zustand stores
+    │   ├── types/          # TypeScript types
+    │   └── lib/            # API client, data gen
+    ├── vite.config.ts
+    └── package.json
+```
+
+---
+
+## 🚀 API Endpoints (Key Ones)
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/analytics/health-score` | POST | Get 7-factor financial health score |
+| `/analytics/anomalies` | POST | Detect unusual transactions by category |
+| `/analytics/persona` | POST | Classify spending archetype |
+| `/ml/monte-carlo` | POST | Run 500-trial stochastic projection |
+| `/ai/advisor` | POST | Stream AI financial advice |
+| `/transactions/import` | POST | Parse and ingest bank statements |
+
+Full docs at `/docs` after starting backend.
+
+---
+
+## 🎓 Academic Contributions
+
+If you're defending this as a final-year project:
+1. **Temporal Trend-Weighted Health Scoring** — Penalizes worsening trajectories, not just static overspending
+2. **Category-Aware Anomaly Detection** — Modified z-scores per category (not global), robust to outliers
+3. **Hybrid Clustering for Persona Classification** — k-means + rule-based, interpretable with confidence scores
+4. **Stochastic Wealth Modeling with Indian Tax Rules** — Full LTCG, marginal slab, inflation-adjusted projections
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend**: FastAPI • uvicorn • pypdf • numpy • httpx • python-dotenv • sse-starlette
+
+**Frontend**: React 19 • TypeScript • Vite • Zustand • Recharts • Tailwind CSS • Lucide Icons
+
+**Design**: Glassmorphism • Dark Mode • Recharts Radar Charts • Custom SVG Animations
+
+---
+
+## 📌 Environment Setup
+
+Create `.env` in `backend/`:
+```
+OPENROUTER_API_KEY=your_api_key_here
+OPENROUTER_API_BASE=https://openrouter.ai/api/v1
+```
+
+If no API key, the AI advisor returns intelligent mock responses (works offline!).
+
+---
+
+## 🎮 Features in Detail
+
+### Spending DNA
+Classifies your transactions into 6 archetypes:
+- 🛒 The Subscription Hoarder
+- 💳 The Impulse Buyer
+- 🏦 The Disciplined Saver
+- 🧑‍💼 The High Roller
+- 👻 The Ghost (barely spends)
+- ⚙️ The Balanced Operator
+
+### Monte Carlo Simulator
+Runs 500 stochastic trials modeling:
+- Monthly income volatility (±5%)
+- Category-wise expense inflation (2-8% annually)
+- Probability of hitting financial goals
+- P10/P25/P50/P75/P90 confidence bands
+
+### The Money Doctor
+AI advisor that:
+- Streams real-time responses via SSE
+- Validates math against a guardrail checklist
+- Falls back to local advice if rate-limited
+- Renders Markdown with glassmorphic design
+
+---
+
+## 🤝 Contributing
+
+Found a bug? Spending category misclassified? Passive income calculator off by a Lakh? 
+- Open an issue with details
+- Fork, fix, submit a PR
+- Add tests if you're feeling ethical
+
+---
+
+## 📄 License
+
+MIT License — Use it, abuse it, but give credit.
+
+---
+
+## 👋 Credits
+
+Built by developers, for developers who refuse to use Excel for financial planning.
+
+**Questions?** Check the [docs](./docs/) folder or run the app and poke around.
+
+*Last Updated: May 2026*
 venv\Scripts\activate
 
 # Install requirements
