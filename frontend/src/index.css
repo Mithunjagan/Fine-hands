@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Clash+Display:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg-base: #070B14;
+  --bg-surface: #0D1321;
+  --bg-card: #111827;
+  --bg-elevated: #1A2235;
+  --accent-primary: #00D4FF;
+  --accent-secondary: #7C3AED;
+  --accent-danger: #EF4444;
+  --accent-success: #10B981;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at 50% 50%, #0d1326 0%, #070B14 100%);
+    color: #F1F5F9;
+    min-height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Clash Display', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background-color: var(--bg-card);
+    @apply border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl relative overflow-hidden;
+  }
+  .glass-panel-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:border-white/10;
+  }
+  .glass-panel-hover:hover {
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+  }
+  .glass-input {
+    background-color: var(--bg-surface);
+    @apply border border-white/10 rounded-xl px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:border-cyan-500/50 transition-all duration-300;
+  }
+  .glass-button {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] border border-white/10 active:scale-95;
+  }
+  .glass-button-secondary {
+    background-color: var(--bg-elevated);
+    @apply hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:border-white/20 active:scale-95;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500;
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

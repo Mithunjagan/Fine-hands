@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>India Passive Income & Investment Predictor</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Calculate and predict your long-term wealth, inflation-adjusted returns, post-tax corpus, and passive income in India using professional compounding models and Monte Carlo simulations.">
+  <meta name="author" content="India Passive Income Predictor Team">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Premium Typography and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <style>
+    /* Premium Modern CSS Reset & Core Styling */
+    :root {
+      --color-primary: #1D9E75;        /* Dark Teal */
+      --color-primary-glow: rgba(29, 158, 117, 0.15);
+      --color-primary-border: rgba(29, 158, 117, 0.4);
+      --color-bear: #E24B4A;           /* Red for Bear Case */
+      --color-bear-glow: rgba(226, 75, 74, 0.15);
+      --color-neutral: #73726c;        /* Grey for Neutral */
+      --color-amber: #f59e0b;          /* Medium Risk / Warning */
+      
+      /* Dark Theme Design Palette */
+      --bg-main: #0a0f1d;
+      --bg-panel: #131b2e;
+      --bg-panel-hover: #1b253c;
+      --bg-card-active: rgba(29, 158, 117, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dark: #64748b;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-active: #1D9E75;
+      
+      --font-headings: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --transition-speed: 0.25s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
+    }
+
+    /* Header Component */
+    header {
+      background: linear-gradient(135deg, #131b2e 0%, #0a0f1d 100%);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #10b981 100%);
+      color: #ffffff;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 0 15px var(--color-primary-glow);
+    }
+
+    .logo-text h1 {
+      font-family: var(--font-headings);
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .live-rates-ticker {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .rate-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .rate-pill .bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+    }
+
+    .rate-label {
+      color: var(--text-muted);
+    }
+
+    .rate-val {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Layout Wrapper */
+    .main-wrapper {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 450px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* Cards Style */
+    .panel {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .panel-title {
+      font-family: var(--font-headings);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .panel-title i {
+      color: var(--color-primary);
+    }
+
+    /* Left Sidebar: Controls & Multi-Select Cards */
+    .sidebar-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .input-val-badge {
+      background: var(--color-primary-glow);
+      color: var(--color-primary);
+      padding: 0.15rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--color-primary-border);
+    }
+
+    .input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-prefix {
+      position: absolute;
+      left: 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .input-field {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.75rem 1rem 0.75rem 2.25rem;
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      transition: all var(--transition-speed);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 10px rgba(29, 158, 117, 0.15);
+    }
+
+    /* Form Select styling */
+    select.input-field {
+      padding-left: 1rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.25rem;
+    }
+
+    /* Presets buttons */
+    .presets-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .btn-preset {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 0.35rem;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      font-weight: 500;
+    }
+
+    .btn-preset:hover {
+      background: var(--color-primary-glow);
+      color: var(--color-primary);
+      border-color: var(--color-primary-border);
+    }
+
+    /* Slider styling */
+    .slider-container {
+      margin-top: 0.5rem;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      outline: none;
+      transition: background 0.15s;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--color-primary-glow);
+      transition: transform 0.1s;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-dark);
+      margin-top: 0.35rem;
+    }
+
+    /* Investment Cards Selector */
+    .investment-cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    /* Custom Scrollbar for investment selector */
+    .investment-cards-grid::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .investment-cards-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .investment-cards-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .investment-cards-grid::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .inst-card {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .inst-card:hover {
+      transform: translateY(-2px);
+      background-color: var(--bg-panel-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .inst-card.active {
+      background-color: var(--bg-card-active);
+      border-color: var(--border-active);
+      box-shadow: 0 0 15px rgba(29, 158, 117, 0.05);
+    }
+
+    .inst-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .inst-name-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .checkbox-indicator {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: transparent;
+      transition: all var(--transition-speed);
+    }
+
+    .inst-card.active .checkbox-indicator {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .inst-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    .badge-risk-low {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-risk-medium {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-risk-high {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-lockin {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    .inst-card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-top: 0.6rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-lbl {
+      color: var(--text-dark);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .meta-val {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .tax-rule-snippet {
+      grid-column: span 2;
+      font-size: 0.75rem;
+      color: var(--color-amber);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Card hover details panel sliding */
+    .inst-card-desc {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 0;
+      border-top: 0px solid transparent;
+      padding-top: 0;
+    }
+
+    .inst-card:hover .inst-card-desc {
+      max-height: 80px;
+      margin-top: 0.6rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.5rem;
+    }
+
+    /* Right Column: Dashboard Layout */
+    .dashboard-results {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Summary KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-speed);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(29, 158, 117, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: var(--color-primary);
+      border-radius: 4px 0 0 4px;
+      opacity: 0.75;
+    }
+
+    /* Style variants for different cards */
+    .kpi-card.real-value::before { background-color: #38bdf8; }
+    .kpi-card.after-tax::before { background-color: #f59e0b; }
+    .kpi-card.passive-inc::before { background-color: #10b981; }
+    .kpi-card.principal::before { background-color: var(--color-neutral); }
+    .kpi-card.multiple::before { background-color: #c084fc; }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .kpi-card:hover .kpi-icon {
+      color: var(--color-primary);
+    }
+
+    .kpi-value {
+      font-family: var(--font-headings);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .kpi-subtext {
+      font-size: 0.7rem;
+      color: var(--text-dark);
+      margin-top: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Tabbed Dashboard Workspace */
+    .tab-section {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-nav {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 1rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-muted);
+      font-family: var(--font-headings);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      transition: color var(--transition-speed);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: #ffffff;
+    }
+
+    .tab-btn.active {
+      color: var(--color-primary);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--color-primary);
+      border-radius: 3px 3px 0 0;
+      box-shadow: 0 -2px 10px var(--color-primary-glow);
+    }
+
+    .tab-content {
+      padding: 1.75rem;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Chart Container sizes */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 420px;
+    }
+
+    /* Custom styles for tables */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      font-family: var(--font-headings);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-inst-name {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .table-color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Zero State / Alert boxes */
+    .dashboard-notification {
+      background-color: rgba(29, 158, 117, 0.05);
+      border: 1px solid var(--color-primary-border);
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.85rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dashboard-notification i {
+      color: var(--color-primary);
+      font-size: 1.1rem;
+    }
+
+    .no-selection-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      gap: 1rem;
+    }
+
+    .no-selection-state i {
+      font-size: 3.5rem;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .no-selection-state h3 {
+      font-family: var(--font-headings);
+      color: #ffffff;
+      font-size: 1.25rem;
+    }
+
+    .no-selection-state p {
+      max-width: 400px;
+      font-size: 0.875rem;
+    }
+
+    /* Bottom Disclaimer Component */
+    .disclaimer-section {
+      max-width: 1400px;
+      margin: 2.5rem auto 1rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .disclaimer-card {
+      background-color: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .disclaimer-card i {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      margin-top: 0.15rem;
+    }
+
+    .disclaimer-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .disclaimer-text strong {
+      color: var(--text-main);
+    }
+
+    /* Tablet and Mobile Optimization */
+    @media (max-width: 1100px) {
+      .main-wrapper {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+      .panel.selector-panel {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+
+      .logo-text h1 {
+        font-size: 1.25rem;
+      }
+
+      .live-rates-ticker {
+        display: none; /* Hide to prevent cluttering tiny screens */
+      }
+
+      .main-wrapper {
+        margin: 1rem auto;
+        padding: 0 1rem;
+        gap: 1.5rem;
+      }
+
+      .sidebar-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .panel.selector-panel {
+        grid-column: span 1;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .tab-btn {
+        padding: 1rem 0.75rem;
+        font-size: 0.85rem;
+      }
+
+      .chart-container {
+        height: 320px;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .logo-text p {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fa-solid fa-chart-line-up"></i>
+        </div>
+        <div class="logo-text">
+          <h1>India Passive Income Predictor</h1>
+          <p>Advanced Compound wealth &amp; Monte Carlo simulator</p>
+        </div>
+      </div>
+      
+      <!-- Real-time key interest rates ticker -->
+      <div class="live-rates-ticker">
+        <div class="rate-pill">
+          <div class="bullet"></div>
+          <span class="rate-label">PPF Return:</span>
+          <span class="rate-val">7.10%</span>
+        </div>
+        <div class="rate-pill">
+          <div class="bullet"></div>
+          <span class="rate-label">SBI/HDFC FD:</span>
+          <span class="rate-val">6.50%</span>
+        </div>
+        <div class="rate-pill">
+          <div class="bullet"></div>
+          <span class="rate-label">RBI Floating Bond:</span>
+          <span class="rate-val">8.05%</span>
+        </div>
+        <div class="rate-pill">
+          <div class="bullet"></div>
+          <span class="rate-label">Nifty 50 Index (Avg):</span>
+          <span class="rate-val">12.00%</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Wrapper -->
+  <main class="main-wrapper">
+    
+    <!-- Sidebar: User Parameters & Instrument Selector -->
+    <div class="sidebar-controls">
+      
+      <!-- Panel 1: User Inputs -->
+      <div class="panel">
+        <h2 class="panel-title">
+          <i class="fa-solid fa-sliders"></i> User Input Panel
+        </h2>
+        
+        <!-- Monthly SIP -->
+        <div class="input-group">
+          <div class="input-label-row">
+            <span class="input-label">Monthly SIP Amount</span>
+            <span class="input-val-badge" id="sipValBadge">₹5,000</span>
+          </div>
+          <div class="input-container">
+            <span class="input-icon-prefix">₹</span>
+            <input type="number" id="sipInput" class="input-field" value="5000" min="0" step="500">
+          </div>
+          <div class="presets-row">
+            <button type="button" class="btn-preset" onclick="adjustInput('sipInput', 1000)">+1K</button>
+            <button type="button" class="btn-preset" onclick="adjustInput('sipInput', 5000)">+5K</button>
+            <button type="button" class="btn-preset" onclick="adjustInput('sipInput', 10000)">+10K</button>
+          </div>
+        </div>
+
+        <!-- Lump Sum -->
+        <div class="input-group">
+          <div class="input-label-row">
+            <span class="input-label">Lump Sum / Savings</span>
+            <span class="input-val-badge" id="lumpValBadge">₹0</span>
+          </div>
+          <div class="input-container">
+            <span class="input-icon-prefix">₹</span>
+            <input type="number" id="lumpInput" class="input-field" value="0" min="0" step="5000">
+          </div>
+          <div class="presets-row">
+            <button type="button" class="btn-preset" onclick="adjustInput('lumpInput', 10000)">+10K</button>
+            <button type="button" class="btn-preset" onclick="adjustInput('lumpInput', 50000)">+50K</button>
+            <button type="button" class="btn-preset" onclick="adjustInput('lumpInput', 100000)">+1L</button>
+          </div>
+        </div>
+
+        <!-- Investment Horizon -->
+        <div class="input-group">
+          <div class="input-label-row">
+            <span class="input-label">Investment Horizon</span>
+          </div>
+          <select id="horizonSelect" class="input-field">
+            <option value="3">3 Years</option>
+            <option value="5">5 Years</option>
+            <option value="10" selected>10 Years</option>
+            <option value="15">15 Years</option>
+            <option value="20">20 Years</option>
+            <option value="25">25 Years</option>
+            <option value="30">30 Years</option>
+          </select>
+        </div>
+
+        <!-- Tax Bracket -->
+        <div class="input-group">
+          <div class="input-label-row">
+            <span class="input-label">Your Tax Bracket</span>
+          </div>
+          <select id="taxSelect" class="input-field">
+            <option value="0">0% (Income below ₹7L)</option>
+            <option value="5">5% Bracket</option>
+            <option value="20">20% Bracket</option>
+            <option value="30" selected>30% Bracket</option>
+          </select>
+        </div>
+
+        <!-- Inflation Rate -->
+        <div class="input-group">
+          <div class="input-label-row">
+            <span class="input-label">Expected Inflation Rate</span>
+            <span class="input-val-badge" id="inflationValBadge">6.0%</span>
+          </div>
+          <div class="slider-container">
+            <input type="range" id="inflationSlider" class="slider" min="3" max="9" step="0.5" value="6">
+            <div class="slider-labels">
+              <span>3% (Low)</span>
+              <span>6% (Avg)</span>
+              <span>9% (High)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel 2: Investment Type Selector -->
+      <div class="panel selector-panel">
+        <h2 class="panel-title">
+          <i class="fa-solid fa-wallet"></i> Investment Types
+        </h2>
+        
+        <div class="investment-cards-grid" id="instrumentsGrid">
+          <!-- Dynamically Rendered Cards -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Side: Live Summary & Diagnostic Outputs -->
+    <div class="dashboard-results">
+      
+      <!-- Selected notification box -->
+      <div class="dashboard-notification" id="dashboardNote">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="dashboardNoteText">Select one or more investment types to begin predicting your passive income.</span>
+      </div>
+
+      <!-- KPI Summary grid of cards -->
+      <div class="kpi-grid" id="kpiGrid" style="display: none;">
+        
+        <!-- Nominal Corpus -->
+        <div class="kpi-card nominal-val">
+          <div class="kpi-header">
+            <span class="kpi-title">Avg Projected Corpus</span>
+            <i class="fa-solid fa-money-bill-trend-up kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiAvgCorpus">₹0.00</div>
+          <div class="kpi-subtext">Nominal value at horizon</div>
+        </div>
+
+        <!-- Real Corpus -->
+        <div class="kpi-card real-value">
+          <div class="kpi-header">
+            <span class="kpi-title">Real Purchasing Power</span>
+            <i class="fa-solid fa-shield-halved kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiRealCorpus">₹0.00</div>
+          <div class="kpi-subtext">Adjusted for inflation</div>
+        </div>
+
+        <!-- After-Tax Corpus -->
+        <div class="kpi-card after-tax">
+          <div class="kpi-header">
+            <span class="kpi-title">After-Tax Corpus</span>
+            <i class="fa-solid fa-receipt kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiAfterTaxCorpus">₹0.00</div>
+          <div class="kpi-subtext">Estimated net payout</div>
+        </div>
+
+        <!-- Monthly Passive Income -->
+        <div class="kpi-card passive-inc">
+          <div class="kpi-header">
+            <span class="kpi-title">Monthly Passive Income</span>
+            <i class="fa-solid fa-sack-dollar kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiPassiveIncome">₹0.00</div>
+          <div class="kpi-subtext">Conservative 60% rule</div>
+        </div>
+
+        <!-- Principal Invested -->
+        <div class="kpi-card principal">
+          <div class="kpi-header">
+            <span class="kpi-title">Total Invested</span>
+            <i class="fa-solid fa-hand-holding-dollar kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiTotalInvested">₹0.00</div>
+          <div class="kpi-subtext">Principal amount</div>
+        </div>
+
+        <!-- Wealth Multiple -->
+        <div class="kpi-card multiple">
+          <div class="kpi-header">
+            <span class="kpi-title">Wealth Multiple</span>
+            <i class="fa-solid fa-arrow-up-right-dots kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpiWealthMultiple">0.0x</div>
+          <div class="kpi-subtext">FV ÷ Principal ratio</div>
+        </div>
+
+      </div>
+
+      <!-- Tab Layout Panel -->
+      <div class="tab-section" id="resultsTabsContainer" style="display: none;">
+        
+        <!-- Navigation Tab Strip -->
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchTab(event, 'tabGrowth')">
+            <i class="fa-solid fa-chart-line"></i> Growth Curves
+          </button>
+          <button class="tab-btn" onclick="switchTab(event, 'tabMonteCarlo')">
+            <i class="fa-solid fa-chart-simple"></i> Monte Carlo Bands
+          </button>
+          <button class="tab-btn" onclick="switchTab(event, 'tabBreakdown')">
+            <i class="fa-solid fa-table"></i> Instrument Breakdown
+          </button>
+        </div>
+
+        <!-- Tab Content Panes -->
+        <div class="tab-content">
+          
+          <!-- Tab 1: Growth Curves (Line Chart) -->
+          <div class="tab-pane active" id="tabGrowth">
+            <div class="chart-container">
+              <canvas id="growthChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Tab 2: Monte Carlo Bands (Horizontal Bar Chart) -->
+          <div class="tab-pane" id="tabMonteCarlo">
+            <div class="chart-container">
+              <canvas id="monteCarloChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Tab 3: Instrument Breakdown Table -->
+          <div class="tab-pane" id="tabBreakdown">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Instrument</th>
+                    <th>Base Corpus</th>
+                    <th>Real Corpus (Inflation)</th>
+                    <th>Monthly Income</th>
+                    <th>Bear Case (P10)</th>
+                    <th>Bull Case (P90)</th>
+                    <th>Lock-in</th>
+                  </tr>
+                </thead>
+                <tbody id="breakdownTableBody">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Zero selection warning -->
+      <div id="noSelectionView" class="panel">
+        <div class="no-selection-state">
+          <i class="fa-solid fa-wallet"></i>
+          <h3>No Instruments Selected</h3>
+          <p>Please select one or more investment instruments on the left panel to trigger the compound models and visual growth graphs.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Bottom Disclaimer Section -->
+  <div class="disclaimer-section">
+    <div class="disclaimer-card">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div class="disclaimer-text">
+        <strong>Disclaimer:</strong> All projections are illustrative only and not financial advice. Past returns do not guarantee future performance. Rates used: PPF 7.1% (RBI Q2 FY26), FD 6–6.5% (SBI/HDFC Dec 2025), RBI Bond 8.05% (Dec 2025), REIT 7–11% total return. Consult a SEBI-registered financial advisor before investing.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // System Data Model
+    const INSTRUMENTS = [
+      {
+        id: 'sip',
+        name: 'SIP – Equity Index Fund',
+        minReturn: 10,
+        baseReturn: 12,
+        maxReturn: 15,
+        risk: 'High',
+        lockIn: 'None',
+        taxRule: 'LTCG 12.5% above ₹1.25L',
+        details: 'Tracks NIFTY 50 / BSE Sensex. Best long-term wealth creator in India historically.',
+        color: '#1D9E75'
+      },
+      {
+        id: 'flexicap',
+        name: 'SIP – Flexi Cap Fund',
+        minReturn: 10,
+        baseReturn: 13,
+        maxReturn: 18,
+        risk: 'High',
+        lockIn: 'None',
+        taxRule: 'LTCG 12.5%',
+        details: 'Active fund manager picks across market caps. Higher potential, higher variability.',
+        color: '#38bdf8'
+      },
+      {
+        id: 'govbond',
+        name: 'Government Bonds',
+        minReturn: 6.8,
+        baseReturn: 7.2,
+        maxReturn: 7.8,
+        risk: 'Low',
+        lockIn: '5yr',
+        taxRule: 'Slab rate',
+        details: 'GOI bonds & T-Bills. Near-zero default risk. Good for conservative capital.',
+        color: '#fb7185'
+      },
+      {
+        id: 'fd',
+        name: 'Fixed Deposit',
+        minReturn: 6.0,
+        baseReturn: 6.5,
+        maxReturn: 7.0,
+        risk: 'Low',
+        lockIn: '1yr',
+        taxRule: 'Slab rate',
+        details: 'SBI/HDFC FD. Guaranteed but post-tax real return may be near 0% after inflation.',
+        color: '#a1a1aa'
+      },
+      {
+        id: 'ppf',
+        name: 'PPF',
+        minReturn: 7.1,
+        baseReturn: 7.1,
+        maxReturn: 7.5,
+        risk: 'Low',
+        lockIn: '15yr',
+        taxRule: 'EEE – fully tax-free',
+        details: 'EEE tax-exempt. Best guaranteed tax-free long-term option. 15-yr lock-in.',
+        color: '#f59e0b'
+      },
+      {
+        id: 'rbi',
+        name: 'RBI Floating Rate Bond',
+        minReturn: 7.5,
+        baseReturn: 8.05,
+        maxReturn: 8.5,
+        risk: 'Low',
+        lockIn: '7yr',
+        taxRule: 'Slab rate',
+        details: 'Rate = NSC + 0.35%. Adjusted every 6 months. Available via RBI Retail Direct.',
+        color: '#c084fc'
+      },
+      {
+        id: 'reit',
+        name: 'REITs',
+        minReturn: 5.5,
+        baseReturn: 8.5,
+        maxReturn: 11,
+        risk: 'Medium',
+        lockIn: 'None',
+        taxRule: 'Dividend partially taxable',
+        details: 'Embassy / Mindspace / Nexus. 6–7% dividend yield + capital appreciation.',
+        color: '#22c55e'
+      },
+      {
+        id: 'divstock',
+        name: 'Dividend Stocks',
+        minReturn: 4,
+        baseReturn: 9,
+        maxReturn: 16,
+        risk: 'High',
+        lockIn: 'None',
+        taxRule: 'Dividend + LTCG taxable',
+        details: 'Infosys, ITC, Coal India type. Passive dividend + price growth but volatile.',
+        color: '#ec4899'
+      },
+      {
+        id: 'hisa',
+        name: 'High-Yield Savings Account',
+        minReturn: 3.5,
+        baseReturn: 4.0,
+        maxReturn: 5.0,
+        risk: 'Low',
+        lockIn: 'None',
+        taxRule: 'Slab rate',
+        details: 'Emergency fund only. Real return after tax and inflation is often negative.',
+        color: '#64748b'
+      },
+      {
+        id: 'digital',
+        name: 'Digital Assets (ECE/Coding)',
+        minReturn: 0,
+        baseReturn: 15,
+        maxReturn: 60,
+        risk: 'High',
+        lockIn: 'None',
+        taxRule: 'Business income',
+        details: 'For ECE/coding background: LTspice tutorials, ESP32 tools, PCB calculators, engineering apps. One good tool = years of passive income.',
+        color: '#f43f5e'
+      }
+    ];
+
+    // Selected Instruments Tracker
+    let selectedIds = ['sip', 'ppf', 'digital']; // Pre-selected for visual delight on load
+
+    // Chart Handles
+    let growthChartInstance = null;
+    let monteCarloChartInstance = null;
+
+    // Helper: Indian Currency Formatting
+    function formatIndianCurrency(value) {
+      const val = Math.round(value);
+      if (val < 100000) {
+        return '₹' + new Intl.NumberFormat('en-IN').format(val);
+      } else if (val < 10000000) {
+        const lakhs = val / 100000;
+        return '₹' + lakhs.toFixed(2) + ' L';
+      } else {
+        const crores = val / 10000000;
+        return '₹' + crores.toFixed(2) + ' Cr';
+      }
+    }
+
+    // Helper: Box-Muller Transform
+    function boxMuller() {
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
+    // Compounding Future Value calculator (SIP + Lump Sum)
+    function calculateSIPFV(sip, lumpSum, annualRate, years) {
+      const n = years * 12;
+      const r = annualRate / 12 / 100;
+      if (Math.abs(r) < 1e-9) {
+        return sip * n + lumpSum;
+      }
+      const comp = Math.pow(1 + r, n);
+      return sip * ((comp - 1) / r) * (1 + r) + lumpSum * comp;
+    }
+
+    // Dynamic rendering of selection cards
+    function renderCards() {
+      const container = document.getElementById('instrumentsGrid');
+      container.innerHTML = '';
+
+      INSTRUMENTS.forEach(inst => {
+        const isActive = selectedIds.includes(inst.id);
+        
+        let riskClass = 'badge-risk-medium';
+        if (inst.risk === 'Low') riskClass = 'badge-risk-low';
+        if (inst.risk === 'High') riskClass = 'badge-risk-high';
+
+        const card = document.createElement('div');
+        card.className = `inst-card ${isActive ? 'active' : ''}`;
+        card.id = `card_${inst.id}`;
+        card.onclick = () => toggleSelect(inst.id);
+
+        card.innerHTML = `
+          <div class="inst-card-header">
+            <div class="inst-name-row">
+              <div class="checkbox-indicator">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="inst-title">${inst.name}</span>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="badge ${riskClass}">Risk: ${inst.risk}</span>
+            <span class="badge badge-lockin">Lock-in: ${inst.lockIn}</span>
+          </div>
+          <div class="inst-card-meta">
+            <div class="meta-item">
+              <span class="meta-lbl">Expected Return</span>
+              <span class="meta-val">${inst.baseReturn}% (${inst.minReturn}% - ${inst.maxReturn}%)</span>
+            </div>
+            <div class="tax-rule-snippet">
+              <i class="fa-solid fa-coins"></i> ${inst.taxRule}
+            </div>
+          </div>
+          <div class="inst-card-desc">
+            ${inst.details}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Checkbox selector action
+    function toggleSelect(id) {
+      const index = selectedIds.indexOf(id);
+      if (index === -1) {
+        selectedIds.push(id);
+      } else {
+        selectedIds.splice(index, 1);
+      }
+      renderCards();
+      runCalculations();
+    }
+
+    // Input presets clicker
+    function adjustInput(inputId, amount) {
+      const input = document.getElementById(inputId);
+      const current = parseFloat(input.value) || 0;
+      input.value = current + amount;
+      
+      // Trigger live updates
+      runCalculations();
+    }
+
+    // Tab switcher
+    function switchTab(evt, tabId) {
+      const tabPanes = document.getElementsByClassName('tab-pane');
+      for (let i = 0; i < tabPanes.length; i++) {
+        tabPanes[i].classList.remove('active');
+      }
+
+      const tabBtns = document.getElementsByClassName('tab-btn');
+      for (let i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].classList.remove('active');
+      }
+
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // Core math engine & output generation
+    function runCalculations() {
+      // 1. Inputs reading & badge values updating
+      const sipAmount = parseFloat(document.getElementById('sipInput').value) || 0;
+      const lumpSum = parseFloat(document.getElementById('lumpInput').value) || 0;
+      const horizonYears = parseInt(document.getElementById('horizonSelect').value) || 10;
+      const taxBracket = parseFloat(document.getElementById('taxSelect').value) || 0;
+      const inflationRate = parseFloat(document.getElementById('inflationSlider').value) || 6;
+
+      // Update badge display contents
+      document.getElementById('sipValBadge').textContent = '₹' + new Intl.NumberFormat('en-IN').format(sipAmount);
+      document.getElementById('lumpValBadge').textContent = '₹' + new Intl.NumberFormat('en-IN').format(lumpSum);
+      document.getElementById('inflationValBadge').textContent = inflationRate.toFixed(1) + '%';
+
+      // Handlers for Zero State view
+      if (selectedIds.length === 0) {
+        document.getElementById('noSelectionView').style.display = 'block';
+        document.getElementById('kpiGrid').style.display = 'none';
+        document.getElementById('resultsTabsContainer').style.display = 'none';
+        document.getElementById('dashboardNoteText').textContent = 'Please select one or more investment cards to launch the dynamic predictive algorithms.';
+        document.getElementById('dashboardNote').style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        return;
+      }
+
+      document.getElementById('noSelectionView').style.display = 'none';
+      document.getElementById('kpiGrid').style.display = 'grid';
+      document.getElementById('resultsTabsContainer').style.display = 'block';
+      document.getElementById('dashboardNoteText').textContent = `Showing aggregated predictions computed across ${selectedIds.length} selected asset categories.`;
+      document.getElementById('dashboardNote').style.borderColor = 'var(--color-primary-border)';
+
+      const totalPrincipal = sipAmount * 12 * horizonYears + lumpSum;
+
+      // Variables to compute averages
+      let totalNominal = 0;
+      let totalReal = 0;
+      let totalAfterTax = 0;
+      let totalPassiveIncome = 0;
+
+      const breakdownRows = [];
+      const chartDatasets = [];
+      const mcP10 = [];
+      const mcP50MinusP10 = [];
+      const mcP90MinusP50 = [];
+      const mcLabels = [];
+      const mcFullData = []; // Helper for tooltips
+
+      // Process each selected instrument
+      selectedIds.forEach(id => {
+        const inst = INSTRUMENTS.find(i => i.id === id);
+        
+        // A. Nominal Future Value
+        const nominalFV = calculateSIPFV(sipAmount, lumpSum, inst.baseReturn, horizonYears);
+        totalNominal += nominalFV;
+
+        // B. Real (inflation-adjusted) Future Value
+        const realAnnualRate = ((1 + inst.baseReturn / 100) / (1 + inflationRate / 100)) - 1;
+        const realFV = calculateSIPFV(sipAmount, lumpSum, realAnnualRate * 100, horizonYears);
+        totalReal += realFV;
+
+        // C. Post-Tax Future Value
+        const gains = nominalFV - totalPrincipal;
+        const safeGains = Math.max(0, gains);
+        let tax = 0;
+        if (inst.id === 'ppf') {
+          tax = 0;
+        } else if (inst.id === 'sip' || inst.id === 'flexicap') {
+          tax = Math.max(0, safeGains - 125000) * 0.125;
+        } else {
+          tax = safeGains * (taxBracket / 100);
+        }
+        const postTaxFV = nominalFV - tax;
+        totalAfterTax += postTaxFV;
+
+        // D. Monthly Passive Income (based on post-tax corpus for realism)
+        const monthlyIncome = postTaxFV * (inst.baseReturn * 0.006) / 12;
+        totalPassiveIncome += monthlyIncome;
+
+        // E. Monte Carlo simulation
+        const runs = [];
+        const sd = (inst.maxReturn - inst.minReturn) / 3;
+        for (let i = 0; i < 500; i++) {
+          const z = boxMuller();
+          const r = inst.baseReturn + z * sd;
+          const fv = calculateSIPFV(sipAmount, lumpSum, r, horizonYears);
+          runs.push(fv);
+        }
+        runs.sort((a, b) => a - b);
+        
+        const p10 = runs[Math.floor(500 * 0.10)];
+        const p25 = runs[Math.floor(500 * 0.25)];
+        const p50 = runs[Math.floor(500 * 0.50)];
+        const p75 = runs[Math.floor(500 * 0.75)];
+        const p90 = runs[Math.floor(500 * 0.90)];
+
+        breakdownRows.push({
+          name: inst.name,
+          color: inst.color,
+          nominal: nominalFV,
+          real: realFV,
+          monthly: monthlyIncome,
+          p10: p10,
+          p90: p90,
+          lockIn: inst.lockIn
+        });
+
+        // Tab 1 dataset generation: Growth curve over years
+        const growthData = [];
+        for (let y = 0; y <= horizonYears; y++) {
+          growthData.push({
+            x: y,
+            y: calculateSIPFV(sipAmount, lumpSum, inst.baseReturn, y)
+          });
+        }
+        chartDatasets.push({
+          label: inst.name,
+          data: growthData,
+          borderColor: inst.color,
+          backgroundColor: inst.color + '20',
+          borderWidth: 3,
+          pointHoverRadius: 6,
+          pointRadius: 2,
+          tension: 0.15
+        });
+
+        // Tab 2 parameters: Stacked Monte Carlo Bands
+        mcLabels.push(inst.name);
+        mcP10.push(p10);
+        mcP50MinusP10.push(p50 - p10);
+        mcP90MinusP50.push(p90 - p50);
+        mcFullData.push({ p10, p50, p90 });
+      });
+
+      // Calculate Averages across selections for dashboard
+      const numSelected = selectedIds.length;
+      const avgNominal = totalNominal / numSelected;
+      const avgReal = totalReal / numSelected;
+      const avgAfterTax = totalAfterTax / numSelected;
+      const avgPassive = totalPassiveIncome / numSelected;
+      const wealthMultiple = avgNominal / totalPrincipal;
+
+      // Render Dashboard metrics
+      document.getElementById('kpiAvgCorpus').textContent = formatIndianCurrency(avgNominal);
+      document.getElementById('kpiRealCorpus').textContent = formatIndianCurrency(avgReal);
+      document.getElementById('kpiAfterTaxCorpus').textContent = formatIndianCurrency(avgAfterTax);
+      document.getElementById('kpiPassiveIncome').textContent = formatIndianCurrency(avgPassive);
+      document.getElementById('kpiTotalInvested').textContent = formatIndianCurrency(totalPrincipal);
+      document.getElementById('kpiWealthMultiple').textContent = wealthMultiple.toFixed(2) + 'x';
+
+      // Render Table rows dynamically
+      const tableBody = document.getElementById('breakdownTableBody');
+      tableBody.innerHTML = '';
+      breakdownRows.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div class="table-inst-name">
+              <span class="table-color-dot" style="background-color: ${row.color}"></span>
+              ${row.name}
+            </div>
+          </td>
+          <td>${formatIndianCurrency(row.nominal)}</td>
+          <td style="color: #38bdf8;">${formatIndianCurrency(row.real)}</td>
+          <td style="color: var(--color-primary); font-weight: 600;">${formatIndianCurrency(row.monthly)}</td>
+          <td style="color: var(--color-bear);">${formatIndianCurrency(row.p10)}</td>
+          <td style="color: #22c55e;">${formatIndianCurrency(row.p90)}</td>
+          <td><span class="badge badge-lockin">${row.lockIn}</span></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      // Add "Total Invested" straight growth line to Tab 1 chart
+      const principalGrowth = [];
+      for (let y = 0; y <= horizonYears; y++) {
+        principalGrowth.push({
+          x: y,
+          y: sipAmount * 12 * y + lumpSum
+        });
+      }
+      chartDatasets.push({
+        label: 'Total Principal Invested',
+        data: principalGrowth,
+        borderColor: '#73726c',
+        borderDash: [5, 5],
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: false
+      });
+
+      // Render Chart 1: Growth Curves
+      if (growthChartInstance) {
+        growthChartInstance.destroy();
+      }
+
+      const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+      growthChartInstance = new Chart(ctxGrowth, {
+        type: 'line',
+        data: {
+          datasets: chartDatasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'Inter', size: 11 }
+              }
+            },
+            tooltip: {
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + formatIndianCurrency(context.raw.y);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              title: {
+                display: true,
+                text: 'Investment Horizon (Years)',
+                color: '#94a3b8',
+                font: { family: 'Outfit', size: 12 }
+              },
+              ticks: {
+                color: '#94a3b8',
+                stepSize: horizonYears > 15 ? 5 : 2
+              },
+              grid: {
+                color: 'rgba(255,255,255,0.04)'
+              }
+            },
+            y: {
+              ticks: {
+                color: '#94a3b8',
+                callback: function(value) {
+                  return formatIndianCurrency(value);
+                }
+              },
+              grid: {
+                color: 'rgba(255,255,255,0.04)'
+              }
+            }
+          }
+        }
+      });
+
+      // Render Chart 2: Monte Carlo Bands
+      if (monteCarloChartInstance) {
+        monteCarloChartInstance.destroy();
+      }
+
+      const ctxMC = document.getElementById('monteCarloChart').getContext('2d');
+      monteCarloChartInstance = new Chart(ctxMC, {
+        type: 'bar',
+        data: {
+          labels: mcLabels,
+          datasets: [
+            {
+              label: 'Bear Case (P10 Outcome)',
+              data: mcP10,
+              backgroundColor: 'rgba(226, 75, 74, 0.25)',
+              borderColor: 'rgba(226, 75, 74, 0.5)',
+              borderWidth: 1
+            },
+            {
+              label: 'Median Target (P50 Range)',
+              data: mcP50MinusP10,
+              backgroundColor: function(context) {
+                const index = context.dataIndex;
+                const id = selectedIds[index];
+                const inst = INSTRUMENTS.find(i => i.id === id);
+                return inst ? inst.color + 'bb' : '#1D9E75';
+              },
+              borderWidth: 0
+            },
+            {
+              label: 'Optimistic Ceiling (P90 Premium)',
+              data: mcP90MinusP50,
+              backgroundColor: 'rgba(29, 158, 117, 0.25)',
+              borderColor: 'rgba(29, 158, 117, 0.5)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'Inter', size: 11 }
+              }
+            },
+            tooltip: {
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  const idx = context.dataIndex;
+                  const item = mcFullData[idx];
+                  if (context.datasetIndex === 0) {
+                    return 'Bearish P10 (90% chance to exceed): ' + formatIndianCurrency(item.p10);
+                  } else if (context.datasetIndex === 1) {
+                    return 'Median P50 (Average Outcome): ' + formatIndianCurrency(item.p50);
+                  } else {
+                    return 'Bullish P90 (Top 10% Outcome): ' + formatIndianCurrency(item.p90);
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: {
+                color: '#94a3b8',
+                callback: function(value) {
+                  return formatIndianCurrency(value);
+                }
+              },
+              grid: {
+                color: 'rgba(255,255,255,0.04)'
+              }
+            },
+            y: {
+              stacked: true,
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'Outfit', weight: 600 }
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Initial selector cards rendering
+      renderCards();
+      
+      // 2. Set event listeners for live dynamic model calculation
+      document.getElementById('sipInput').addEventListener('input', runCalculations);
+      document.getElementById('lumpInput').addEventListener('input', runCalculations);
+      document.getElementById('horizonSelect').addEventListener('change', runCalculations);
+      document.getElementById('taxSelect').addEventListener('change', runCalculations);
+      document.getElementById('inflationSlider').addEventListener('input', runCalculations);
+
+      // 3. Initial calculations launch
+      runCalculations();
+    });
+  </script>
+</body>
+</html>

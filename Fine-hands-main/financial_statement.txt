@@ -1,0 +1,13 @@
+Revenue: 12500000
+COGS: 7200000
+Operating Expenses: 3150000
+Interest: 120000
+Taxes: 430000
+
+Assets: 5050000
+Liabilities: 2400000
+Equity: 2650000
+
+Operating Cash Flow: 1540000
+Investing Cash Flow: -400000
+Financing Cash Flow: -150000

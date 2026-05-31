@@ -1,0 +1,412 @@
+Finehands Complete System Overhaul — Implementation Plan
+Goal: Transform the current 4-component demo into a production-grade, A-grade final year project with real ML algorithms, 10+ API endpoints, state management, PWA, gamification, and measurable novel contributions.
+
+Current State Assessment
+Area	What Exists	Grade
+Backend Framework	FastAPI + uvicorn ✅	Good
+ML Modules	4 files in ml/ — skeletal but structurally correct	C+
+API Endpoints	6 routes across 4 routers	C
+Caching	Simple dict cache (unused)	D
+Streaming	SSE via sse-starlette ✅	B
+Frontend Framework	React 19 + Vite + TypeScript ✅	Good
+State Management	Zustand (2 stores)	C
+UI Components	4 components, 1 page	D
+Data Generator	Basic, no city profiles	C
+PWA	vite-plugin-pwa installed, not configured	F
+Docs	None	F
+User Review Required
+IMPORTANT
+
+Tailwind vs Vanilla CSS: Your project uses Tailwind CSS v4 extensively. I'll continue with Tailwind since the entire codebase depends on it. Switching to vanilla CSS would require rewriting every component.
+
+IMPORTANT
+
+OCR Endpoint: The real OCR requires an LLM with vision capabilities (GPT-4o / Claude). I'll implement it to work with OpenRouter's vision models when an API key is present, and return intelligent mock data when no key is set. This means it works in demos without needing a paid API key.
+
+WARNING
+
+No Database: The project currently has no database. I'll keep everything in-memory (Zustand on frontend, dict stores on backend) since this is a demo project. Firebase is mentioned in the structure but not implemented — I'll skip it to avoid scope creep.
+
+Open Questions
+IMPORTANT
+
+Currency: The current code uses ₹ (Rupees). Should I keep this or switch to $? I'll default to ₹ since it appears to be an Indian university project.
+
+IMPORTANT
+
+Deployment Target: Do you need Docker/deployment configs, or is running locally via npm run dev + uvicorn sufficient for your demo?
+
+Proposed Changes
+Phase 1: Backend ML Layer — The Novel Contribution
+This is the academic core. Every algorithm must be real, documented, and testable.
+
+[MODIFY] 
+health_score.py
+Current: 4-factor weighted average (savings rate, bloat index, emergency fund, consistency).
+
+Upgrade to 7-factor composite with temporal decay and trend analysis:
+
+Factor	Weight	Method
+Savings Rate	0.20	(income - spend) / income
+Emergency Fund Coverage	0.15	min(savings / (6 * monthly_expenses), 1.0)
+Subscription Bloat	0.10	1 - (unused_subs / total_subs)
+Spending Consistency (CoV)	0.10	1 - min(σ/μ, 1.0) per category
+Category Diversity (Shannon Entropy)	0.10	H(spending) / H_max — measures spending diversification
+Anomaly Impact	0.15	1 - (anomaly_spend / total_spend) — penalizes outlier transactions
+Trend Direction	0.20	Exponentially-weighted moving average slope of weekly spending — novel
+Novel claim: "Temporal trend-weighted composite scoring that penalizes worsening trajectories more heavily than static overspending."
+
+Return expanded response with per-factor breakdown for frontend visualization.
+
+[MODIFY] 
+anomaly_detector.py
+Current: Global z-score across all transactions.
+
+Upgrade to category-aware modified z-score with IQR fallback:
+
+Compute z-scores per category (dining anomalies compared to dining mean, not global mean)
+Use Modified Z-Score (median-based) for robustness against outliers
+Add IQR method fallback for small sample sizes (< 10 in category)
+Return severity levels: warning (2σ), alert (2.5σ), critical (3σ+)
+Add explanation field: "This $1,450 Gucci purchase is 3.2σ above your average shopping spend of $87"
+[MODIFY] 
+persona_classifier.py
+Current: Simple if/else heuristics.
+
+Upgrade to hybrid rule-based + k-means clustering:
+
+Build a 5-dimensional feature vector per user: [dining_ratio, shopping_ratio, savings_rate, subscription_count_normalized, spending_variance]
+Pre-define 6 cluster centroids (no training data needed — use reference profiles)
+Classify by minimum Euclidean distance to centroids
+Keep rule-based overrides for edge cases (e.g., 0 spending = "The Ghost")
+Add confidence score (inverse distance ratio)
+Add traits array for radar chart data
+[MODIFY] 
+monte_carlo.py
+Current: Fixed volatility, expense only in month 1.
+
+Upgrade to proper stochastic modeling:
+
+Accept planned_expenses as array (recurring vs one-time)
+Model monthly income volatility (±5% normal distribution)
+Model expense category inflation (2-8% annual depending on category)
+Add P25 and P75 bands (5 total bands)
+Support 12-month and 24-month projections
+Return goal_hit_probability — probability of reaching a target balance
+Phase 2: Backend API Completeness (10+ endpoints)
+[MODIFY] 
+analytics.py
+Add 2 new endpoints:
+
+
+GET  /api/analytics/heatmap-data    → daily spend aggregated by date for calendar viz
+GET  /api/analytics/net-worth       → computed net worth with trend
+Heatmap: Aggregates transactions by date, returns { date: "2026-05-15", total: 234.50, count: 5 }[].
+
+Net Worth: Takes assets (savings, investments) minus liabilities, tracks trend over time windows.
+
+[MODIFY] 
+transactions.py
+Upgrade OCR endpoint:
+
+When OpenRouter API key exists: Send base64 image to vision model for real extraction
+When no key: Return realistic mock data based on common receipt patterns
+Add POST /api/transactions/add for manual transaction entry
+Add GET /api/transactions/list with category/date filters
+[MODIFY] 
+goals.py
+Replace static mock data:
+
+POST /api/goals — create a new goal
+PUT /api/goals/{id} — update progress
+GET /api/goals — list all goals with computed days_remaining, on_track status, required_monthly_savings
+In-memory store with pre-seeded demo goals
+[NEW] 
+notifications.py
+Smart notification engine:
+
+GET /api/notifications — returns prioritized alert queue
+Notification types: anomaly_alert, goal_milestone, score_change, subscription_warning, savings_tip
+Each notification has severity, title, body, action_url, timestamp
+Generated dynamically from transaction analysis, goal progress, and health score changes
+[NEW] 
+onboard.py
+POST /api/onboard — accept user profile (name, income, city, savings, spending habits)
+Generates initial synthetic transaction data server-side
+Returns onboarding summary with initial health score
+[MODIFY] 
+cache.py
+Upgrade to TTL-based cache with hash keys:
+
+get_cached(key, max_age_seconds=300)
+set_cache(key, value) — stores with timestamp
+cache_key(data) — generates deterministic hash from input data
+Use in analytics endpoints to avoid recomputation on identical inputs
+[MODIFY] 
+app.py
+Register new routers (notifications, onboard)
+Add request logging middleware
+Add /api/health endpoint for frontend connectivity check
+[NEW] 
+requirements.txt
+
+fastapi>=0.115.0
+uvicorn>=0.30.0
+httpx>=0.27.0
+sse-starlette>=2.0.0
+numpy>=1.26.0
+python-dotenv>=1.0.0
+Phase 3: Frontend — State Management & Data Layer
+[MODIFY] 
+index.ts
+ (types)
+Expand TypeScript schemas to cover all features:
+
+typescript
+
+// Add: Goal, Notification, Persona, Anomaly, HeatmapDay, 
+// GamificationState, NetWorthSnapshot, ReceiptResult, 
+// MonteCarloConfig, MonteCarloBand, HealthScoreBreakdown
+Every API response will have a matching TypeScript interface.
+
+[NEW] 
+api.ts
+Centralized API client:
+
+Base URL configuration
+Generic fetchJSON<T> with error handling and retry logic
+SSE stream helper with reconnection
+All endpoint methods typed
+Connectivity check on mount
+[NEW] 
+uiStore.ts
+typescript
+
+interface UIState {
+  activePage: 'dashboard' | 'transactions' | 'analytics' | 'goals' | 'settings';
+  sidebarOpen: boolean;
+  activeModal: string | null;
+  notifications: Notification[];
+  isOnboarded: boolean;
+}
+[NEW] 
+goalStore.ts
+Manages savings goals with CRUD operations and computed fields.
+
+[NEW] 
+gamificationStore.ts
+XP, level, quests, badges — all computed from user behavior (transactions logged, goals hit, streaks).
+
+[MODIFY] 
+dataGenerator.ts
+Upgrade to city-aware profile-based generation:
+
+City cost-of-living multipliers (Mumbai, Delhi, Bangalore, Hyderabad, etc.)
+Realistic subscription mix (Netflix, Spotify, Gym, Cloud storage)
+Seasonal spending patterns (festival months spike)
+Guaranteed anomalies for demo purposes
+Income-proportional spending distributions
+Generate 6 months of data with 20-35 transactions per month
+Phase 4: Frontend — New Components (10 new components)
+[NEW] 
+ErrorBoundary.tsx
+React error boundary with:
+
+Glassmorphism error card
+Retry button
+Error details expandable section
+[NEW] 
+SkeletonLoader.tsx
+Shimmer loading skeletons that match each component's layout:
+
+CardSkeleton, GaugeSkeleton, ChartSkeleton, ListSkeleton
+Animated gradient shimmer effect
+[NEW] 
+OnboardingWizard.tsx
+3-step onboarding flow:
+
+Name + Income + City
+Current savings + spending personality (quick quiz)
+Set first financial goal
+Glassmorphism modal with step indicators and smooth transitions.
+
+[NEW] 
+SpendingHeatmap.tsx
+GitHub-style contribution heatmap but for spending:
+
+6-month calendar grid
+Color intensity = spend amount (green = low, yellow = medium, red = high)
+Hover tooltip with day details
+Built with CSS Grid (no external dependency)
+[NEW] 
+AnomalyScanner.tsx
+Dedicated anomaly view (separate from SpendingDNA):
+
+Real-time scan animation on load
+Cards for each anomaly with severity badges
+Explanation text from backend
+"Dismiss" and "Investigate" actions
+[NEW] 
+ReceiptOCR.tsx
+Camera/file upload interface:
+
+Drag-and-drop zone with camera icon
+Preview of uploaded image
+Processing animation
+Parsed result card with editable fields
+"Add to Transactions" button
+[NEW] 
+GoalTracker.tsx
+Visual goal cards:
+
+Progress ring (like health score gauge)
+Days remaining countdown
+On-track / behind indicator
+"Add Goal" modal
+Goal completion celebration animation
+[NEW] 
+NotificationCenter.tsx
+Slide-out notification panel:
+
+Grouped by type (anomaly, goal, tip)
+Severity-colored left borders
+Mark as read / dismiss
+Unread count badge on bell icon
+[NEW] 
+GamificationPanel.tsx
+XP and quest system:
+
+Level bar with current XP / next level threshold
+Active quests list with progress
+Badge gallery (earned + locked)
+Quest types: "Log 5 transactions", "Stay under budget for a week", "Set 3 goals"
+[NEW] 
+NetWorthTracker.tsx
+Large number display with trend arrow
+Sparkline chart (last 6 months)
+Breakdown: Savings vs Investments vs Liabilities
+Month-over-month change percentage
+[MODIFY] 
+AIAdvisor.tsx
+Add:
+
+Chat input field at bottom (currently missing the <input> for query)
+Message history with user/bot distinction
+Typing indicator animation
+Fallback advice when backend is unreachable (locally computed tips based on transaction data)
+[MODIFY] 
+HealthScoreGauge.tsx
+Add:
+
+Per-factor breakdown bars (7 factors from the new algorithm)
+Trend indicator (↑ improving, ↓ declining)
+Animated count-up on score display
+Skeleton loader while computing
+[MODIFY] 
+SpendingDNA.tsx
+Use real radar data from persona API (currently hardcoded)
+Add confidence percentage
+Add trait pills
+Remove anomaly section (moved to dedicated component)
+[MODIFY] 
+MonteCarloSimulator.tsx
+Add P25/P75 bands (5 total)
+Add goal target line overlay
+Add "goal hit probability" percentage display
+Slider for expense amount (live updates as slider moves)
+Toggle between 6/12/24 month projections
+Phase 5: Pages & Navigation
+[MODIFY] 
+Dashboard.tsx
+Restructure into a full multi-section dashboard:
+
+
+Row 1: [Net Worth Tracker] [Health Score Gauge] [Quick Stats Cards]
+Row 2: [Monte Carlo Simulator] [Spending Heatmap]  
+Row 3: [SpendingDNA + Persona] [Anomaly Scanner]
+Row 4: [Goal Tracker] [Gamification Panel]
+Row 5: [AI Advisor (full-width)]
+Sidebar becomes functional (navigates between sections)
+Bottom action bar: Add Transaction, Scan Receipt, Chat with Doctor
+Notification bell opens NotificationCenter
+Show OnboardingWizard on first visit
+[MODIFY] 
+App.tsx
+Wrap with ErrorBoundary
+Add onboarding check (show wizard if not onboarded)
+Generate synthetic data on onboarding completion
+Phase 6: PWA Setup
+[MODIFY] 
+vite.config.ts
+Add VitePWA plugin with:
+
+App name: "Finehands"
+Theme color: #070B14
+Icons (generated from existing favicon)
+Offline fallback page
+[NEW] 
+manifest.json
+Standard PWA manifest with app metadata.
+
+[MODIFY] 
+index.html
+Add proper <title>: "Finehands — Intelligent Financial Health System"
+Add <meta name="description">
+Add <meta name="theme-color">
+Add PWA manifest link
+Add Apple touch icon
+Phase 7: Documentation — Academic Grade
+[NEW] 
+architecture.md
+System architecture document with:
+
+High-level architecture diagram (Mermaid)
+Component interaction flow
+Data flow diagram
+ML pipeline description
+Novel contribution statement
+Technology justification
+[NEW] 
+api-reference.md
+Full API documentation:
+
+Every endpoint with method, path, request body, response schema
+Example requests and responses
+Error codes
+[NEW] 
+evaluation-results.md
+Simulated evaluation metrics:
+
+Anomaly detection: Precision, Recall, F1 on synthetic test set
+Categorization accuracy of persona classifier
+Health score distribution analysis
+Monte Carlo accuracy vs deterministic projection
+UI task completion benchmarks (simulated)
+Verification Plan
+Automated Tests
+Backend ML modules: Run each module with test data and verify output schemas
+bash
+
+cd backend && python -c "from ml.health_score import compute_health_score; print(compute_health_score([...], 10000, 6500))"
+API endpoints: Start uvicorn, curl each endpoint, verify JSON responses
+Frontend build: npm run build must succeed with zero TypeScript errors
+Frontend dev: npm run dev must render all components without console errors
+Manual Verification
+Walk through the onboarding wizard flow
+Verify all dashboard sections render with skeleton loaders → data
+Test Monte Carlo simulator slider interaction
+Test receipt OCR upload flow
+Verify notification bell shows alerts
+Test on mobile viewport for responsiveness
+Verify PWA install prompt appears on supported browsers
+Execution Order
+Step	Component	Est. Files
+1	Backend ML modules (4 files)	4
+2	Backend new routers + cache + app.py	5
+3	Frontend types + API client + stores	6
+4	Frontend new components (10 files)	10
+5	Frontend modify existing components (4 files)	4
+6	Dashboard restructure + App.tsx	2
+7	PWA + index.html + vite.config	3
+8	Documentation (3 files)	3
+Total		~37 files

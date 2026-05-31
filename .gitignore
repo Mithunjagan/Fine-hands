@@ -1,12 +1,41 @@
+# Node.js
+**/node_modules/
+**/dist/
+**/.vite/
+frontend/dist-old/
+
+# Python Virtual Environments & Cache
+**/venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+ENV/
+backend/venv/
+
+# Environment Secrets
 .env
 .env.*
 !.env.example
 
-venv/
-.venv/
-__pycache__/
-*.pyc
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-uploads/
-processed/
-*.db
+# System Generated Logs / Checkpoints
+.gemini/
+brain/
+**/task*.log
+**/test_openrouter.py
+**/find_dollars*.py
+**/find_currencies*.py
+**/find_lucide_dollars*.py
